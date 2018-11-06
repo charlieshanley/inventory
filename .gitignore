@@ -1,0 +1,6 @@
+.stack-work/
+files.cabal
+*~
+*.swp
+*.swo
+*.swn
