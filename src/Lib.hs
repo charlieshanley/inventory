@@ -8,10 +8,10 @@ import Data.Maybe      (fromMaybe)
 
 inventory :: IO ()
 inventory = do
-    (src, dest) <- options "CSV inventory of files" parser
+    (src, mDest) <- options "CSV inventory of files" parser
     exists <- testdir src
     when (not exists) $ die (format ("dir does not exist: "%fp) src)
-    maybe stdout output dest $ return "Path,Name,Extension,Size" <|> do
+    maybe stdout output mDest $ return "Path,Name,Extension,Size" <|> do
         path   <- lsif (return . notHidden) src 
         isFile <- testfile path
         f      <- if isFile then return path else empty
