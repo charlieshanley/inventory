@@ -11,12 +11,11 @@ inventory = do
     (src, dest) <- options "CSV inventory of files" parser
     exists <- testdir src
     when (not exists) $ die (format ("dir does not exist: "%fp) src)
-    let files = do path <- lsif (return . notHidden) src 
-                   isFile <- testfile path
-                   if isFile then return path else empty
     maybe stdout output dest $ return "Path,Name,Extension,Size" <|> do
-        f    <- files
-        size <- du f
+        path   <- lsif (return . notHidden) src 
+        isFile <- testfile path
+        f      <- if isFile then return path else empty
+        size   <- du f
         let ext = fromMaybe "" $ extension f
             rec = format (fp%","%fp%","%s%","%sz) (dirname f) (basename f) ext size
         fromMaybe empty (return <$> textToLine rec)
