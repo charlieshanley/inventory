@@ -12,17 +12,20 @@ inventory = do
     exists <- testdir src
     when (not exists) $ die (format ("dir does not exist: "%fp) src)
     maybe stdout output mDest $ return "Path,Name,Extension,Size" <|> do
-        path   <- lsif (return . notHidden) src 
-        isFile <- testfile path
-        f      <- if isFile then return path else empty
-        size   <- du f
-        let ext = fromMaybe "" $ extension f
-            rec = format (fp%","%fp%","%s%","%sz) (directory f) (basename f) ext size
-        fromMaybe empty (return <$> textToLine rec)
+        path <- lsif (return . notHidden) src 
+        file <- testfile path >>= \isfile -> if isfile then return path else empty
+        info file
 
 parser :: Parser (FilePath, Maybe FilePath)
 parser = (,) <$>           optPath "src"  's' "The source directory"
              <*> optional (optPath "dest" 'd' "The destination csv file (stdout if missing)")
+
+info :: FilePath -> Shell Line
+info p = do
+    size <- du p
+    let ext = fromMaybe "" $ extension p
+        txt = format (fp%","%fp%","%s%","%sz) (directory p) (basename p) ext size
+    fromMaybe empty (return <$> textToLine txt)
 
 notHidden :: FilePath -> Bool
 notHidden = null . match (begins ".") . format fp . basename
