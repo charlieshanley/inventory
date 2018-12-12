@@ -4,3 +4,4 @@ files.cabal
 *.swp
 *.swo
 *.swn
+deploy.sh
