@@ -20,8 +20,7 @@ to the screen or you could pipe it into another program.
 
 All together now:
 ```
-./inventory-exe.exe --src C:/Users/CHanley/Downloads
---dest C:/Users/CHanley/Downloads/inventory.csv
+./inventory-exe.exe --src C:/Users/CHanley/Downloads --dest C:/Users/CHanley/Downloads/inventory.csv
 ```
 
 It will run faster if you copy the executable to your local machine and run from
